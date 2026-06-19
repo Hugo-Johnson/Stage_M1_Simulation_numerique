@@ -33,8 +33,14 @@ vf=8.0      # Fermi velocity (a.u.) for graphene
 # E = 10      # Test Electric field 
 T = 0 # time compteur
 ## Parameters ------------------------------------------------------------------------
-step =  0.1* 2 * np.pi / 50		# integration timestep 
-N = 500	                    # number of trajectories
+
+step =  0.027 #0.1* 2 * np.pi / 50 # integration timestep 
+''' Step infos caculé via système parabolique
+0.027 : calculé pour Yoshida --) erreur du schéma, environ 4.4 * 10^-15 et 1 * 10^-15 pour l'énergie
+0.01 : Calculé pour BM4 --)      erreur du schéma, environ 8.7 * 10^-15 et 4 * 10^-15 pour l'énergie
+'''
+N = 500    # number of trajectories
+# ------------------------------------------------------------------------------
 """
 Y_dot renvoie toujours le problème Hamiltonien "H" sous la forme:
 y0 = d_{py}H
@@ -87,9 +93,9 @@ def y_dot_Hugo(y):
     c = 1
    
     G1 = ( e * B * vf**2) / (c * varepsilon(y)) 
-    G2 = (e * B / c)
+    G2 =  (e * B / c)
     q, p = np.split(y, 2)
-    y0 = G2 * ((vf**2 * p / varepsilon(y)) + vd) 
+    y0 =  G2 * ((vf**2 * p / varepsilon(y)) + vd) 
     y1 = -G1 * q
 
     return np.concatenate((y0, y1), axis=None)
@@ -108,20 +114,22 @@ def y_dot_Hugo_Parabolic(y): #resolution papier pour bande parabolique
 # ---------------- Bande linéaire ---------------------------
 def y_dot_Hugo_lineaire(P): #resolution papier pour bande linéaire
     e, c = 1, 1
-    vF = 0.8
+    vF = 8
     G =  e * B  / c
     q, p = np.split(P, 2)
+
     def varepsilon_graphene(p):
-        px = p[0]
-        py = p[1]
-        return  vF * np.sqrt((px**2 + py**2)) #♦+ 100
-    y0 = G * ((vF**2 * p / varepsilon_graphene(P)) + vd)
-    y1 = -G * (vF**2 * q / varepsilon_graphene(P))
+        px, py = np.split(p, 2)
+        # py = p[1]
+        return   np.sqrt(vF**2*(px**2 + py**2)) 
+    
+    y0 =  G * ((vF**2 * p / varepsilon_graphene(P)) + vd)
+    y1 = -G *  (vF**2 * q / varepsilon_graphene(P))
     return np.concatenate((y0 , y1), axis=None)
 
 # --------------------------------------------------
 
-y_dot = y_dot_G0 #select y_dot
+y_dot = y_dot_G #select y_dot
 
 J20 = np.array([[1, 1], [1, 1]]) / 2
 J22 = np.array([[1, -1], [-1, 1]]) / 2
@@ -152,10 +160,6 @@ def chi_star(h:float, t,  y:np.ndarray) -> np.ndarray:
 	y_[0] += h * y_dot(y_[1])
 	y_[1] += h * y_dot(y_[0])
 	return np.concatenate([_ for _ in y_], axis=None)
-
-def integrate( y_:np.ndarray) ->  np.ndarray :
-    sol = pyhamsys.solve_ivp_symp(chi, chi_star, (0, step), y_, params=Parameters(step=step))
-    return sol.y[:, 1]
 
 ## Initial conditions
 def init_distribution():
@@ -197,8 +201,8 @@ def band(name):
 #     E = widget_Electric.value()
 
 y_dot_options = {
-    'Graphène 0': y_dot_G0,
-    'Graphène 1': y_dot_G,
+    # 'Graphène 0': y_dot_G0, # Cas qui présente des problèmes car mal défini depuis le départ
+    'Graphène': y_dot_G,
     'Parabolic': y_dot_P,
     'BZH' : y_dot_BHZ,
     'Hugo (Bande dispersion of massive Dirac fermions) ' : y_dot_Hugo,
@@ -316,6 +320,13 @@ ptr = 0
 #the explicit resolution of nonseparable Hamiltonian 
 #requires the uses of an augmented (x2) Hamiltonian.
 y_ =  np.tile(y0, 2).astype(np.float64)
+
+
+def integrate( y_:np.ndarray) ->  np.ndarray :
+    # solver : Yos6, BM4, 
+    sol = pyhamsys.solve_ivp_symp(chi, chi_star, (0, step), y_, params=Parameters(step=step, solver='Yos6'))
+    return sol.y[:, 1]
+
 
 def update():
     global curve,  ptr, p6, y_, T, step
