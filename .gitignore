@@ -1,0 +1,17 @@
+# Python : fichiers temporaires compilés
+__pycache__/
+*.py[cod]
+
+# Jupyter : sauvegardes automatiques
+.ipynb_checkpoints/
+
+# Environnements virtuels Python
+.venv/
+venv/
+env/
+
+# Éditeurs et système
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
