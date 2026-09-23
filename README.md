@@ -11,10 +11,11 @@ Encadré par Dr. Hélène Mathis et Dr. Benoit Jouault, avec l'aide de Frédéri
 
 * `Rapport_de_stage_M1` : Rapport Latex qui explique la première approche réalisée lors du stage, ainsi que le code final rendu à l'issue du stage.
 
-* `Jouet` / `Bande_parabolique` / `Bande_Fermions_et_Graphene_G0` / `Bande_graphene_Sergei(lineaire)` : Ces notebooks représentent chacun un système Hamiltonien différent à étudier. Le premier étant le cas "Jouet", qui est le problème le plus trivial et permet de comprendre les enjeux du stage.
+* `Programme_Systeme_Hamiltonien`: Dossier contenant le code final du stage, il est composé de 4 programmes.
 
-* `streaming_example` : Code qui permet de simuler la trajectoire des particules selon les bandes choisies.
-* `Explicit symplectic approximation...` : PDF  qui permet de comprendre la méthode d'intégration utilisée dans le code précédent.
+* `notebooks_exploration` : Dossier avec les notebooks représentant chacun un système Hamiltonien différent à étudier. Le premier étant le cas "Jouet", qui est le problème le plus trivial et permet de comprendre les enjeux du stage.
+
+* `streaming_example` : Dossier contenant un code qui permet de simuler la trajectoire des particules selon les bandes choisies et un PDF expliquant la méthode utilisé sur ce code.
 
 Les librairies classiques sont utilisées, à part PyHamSys qui devra sûrement être installée et qui regroupe des méthodes liées à la résolution de systèmes Hamiltoniens.
 
