@@ -17,3 +17,5 @@ Encadré par Dr. Hélène Mathis et Dr. Benoit Jouault, avec l'aide de Frédéri
 * `Explicit symplectic approximation...` : PDF  qui permet de comprendre la méthode d'intégration utilisée dans le code précédent.
 
 Les librairies classiques sont utilisées, à part PyHamSys qui devra sûrement être installée et qui regroupe des méthodes liées à la résolution de systèmes Hamiltoniens.
+
+Cette librairie est retrouvable ici : "https://github.com/cchandre/pyhamsys"
